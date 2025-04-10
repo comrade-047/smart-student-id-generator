@@ -63,8 +63,8 @@ const StudentForm = ({ onSubmit }) => {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Student Information Form</h1>
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-2xl shadow-xl p-6">
+      <h1 className="text-4xl font-bold text-white text-center mb-8  drop-shadow">Student Information Form</h1>
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white/10 backdrop-blur-2xl text-white border border-white/20 rounded-3xl shadow-2xl p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             name="name"
@@ -72,7 +72,7 @@ const StudentForm = ({ onSubmit }) => {
             value={formData.name}
             onChange={handleChange}
             required
-            className="p-3 border rounded w-full"
+            className="p-2 rounded-xl bg-white/20 placeholder-white/80 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <input
             name="rollNumber"
@@ -80,14 +80,14 @@ const StudentForm = ({ onSubmit }) => {
             value={formData.rollNumber}
             onChange={handleChange}
             required
-            className="p-3 border rounded w-full"
+            className="p-2 rounded-xl bg-white/20 placeholder-white/80 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <select
             name="classDivision"
             value={formData.classDivision}
             onChange={handleChange}
             required
-            className="p-3 border rounded w-full"
+            className="p-2 rounded-xl bg-white/20 placeholder-white/80 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="">Select Class & Division</option>
             {classOptions.map((opt) => (
@@ -99,7 +99,7 @@ const StudentForm = ({ onSubmit }) => {
             value={formData.busRoute}
             onChange={handleChange}
             required
-            className="p-3 border rounded w-full"
+            className="p-2 rounded-xl bg-white/20 placeholder-white/80 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="">Select Bus Route</option>
             {busRoutes.map((route) => (
@@ -112,22 +112,22 @@ const StudentForm = ({ onSubmit }) => {
             value={formData.rackNumber}
             onChange={handleChange}
             required
-            className="p-3 border rounded w-full"
+            className="p-2 rounded-xl bg-white/20 placeholder-white/80 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div>
-          <label className="block mb-2 font-medium text-gray-700">Allergies</label>
+          <label className="block mb-2 font-semibold text-white">Allergies</label>
           <div className="flex flex-wrap gap-4">
             {allergyOptions.map((allergy) => (
-              <label key={allergy} className="flex items-center space-x-2">
+              <label key={allergy} className="flex items-center gap-2 text-white/90">
                 <input
                   type="checkbox"
                   name="allergies"
                   value={allergy}
                   checked={formData.allergies.includes(allergy)}
                   onChange={handleChange}
-                  className="accent-blue-600"
+                  className="accent-blue-400 w-5 h-5"
                 />
                 <span>{allergy}</span>
               </label>
@@ -141,34 +141,34 @@ const StudentForm = ({ onSubmit }) => {
               placeholder="Please specify"
               value={formData.otherAllergy}
               onChange={handleChange}
-              className="mt-3 p-3 border rounded w-full md:w-1/2"
+              className="mt-2 p-2 rounded-xl bg-white/20 placeholder-white/70 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full md:w-1/2"
               required
             />
           )}
         </div>
 
         <div>
-          <label className="block mb-2 font-medium text-gray-700">Upload Student Photo</label>
+          <label className="block mb-2 font-semibold text-white">Upload Student Photo</label>
           <input
             type="file"
             name="photo"
             accept="image/*"
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="w-full p-2 rounded-xl bg-white/20 text-white border border-white/30 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600"
           />
           {formData.photoPreview && (
             <img
               src={formData.photoPreview}
               alt="Preview"
-              className="mt-4 w-32 h-32 object-cover rounded-full shadow border"
+              className="mt-2 w-32 h-32 object-cover rounded-full shadow-lg border-4"
             />
           )}
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white text-lg font-semibold py-3 rounded-lg hover:bg-blue-700 transition"
+          className="w-full bg-gradient-to-r from-blue-500 to-teal-400 text-white text-lg font-semibold py-3 rounded-xl shadow-lg hover:from-teal-500 hover:to-blue-600 transition duration-300"
         >
           Generate ID
         </button>

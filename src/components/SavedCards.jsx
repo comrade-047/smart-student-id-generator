@@ -14,8 +14,8 @@ const SavedCards = () => {
   const baseClasses =
     'w-full max-w-sm md:max-w-md p-6 rounded-2xl shadow-lg border flex flex-col items-center transition-all duration-300';
   const styles = {
-    template1: 'bg-white text-gray-800',
-    template2: 'bg-blue-100 text-blue-900',
+    template1: 'bg-white text-gray-800 backdrop-blur-md bg-opacity-80',
+    template2: 'bg-gradient-to-br from-blue-100 to-blue-300 text-blue-900 backdrop-blur-md bg-opacity-90',
   };
 
   const handleStartDownload = (index) => {
@@ -42,13 +42,13 @@ const SavedCards = () => {
     <div className="p-6 max-w-6xl mx-auto">
       <button
         onClick={() => navigate('/')}
-        className="flex items-center gap-2 mb-8 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded text-gray-800"
+        className="flex items-center gap-2 mb-8 px-4 py-2 bg-white/80 hover:bg-white rounded shadow text-gray-800 backdrop-blur"
       >
         <ArrowLeft size={20} />
         <span>Back to Form</span>
       </button>
 
-      <h1 className="text-3xl font-bold mb-8 text-center text-gray-900">Saved ID Cards</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center text-white">Saved ID Cards</h1>
 
       {savedCards.length === 0 ? (
         <p className="text-center text-gray-500 text-lg">No saved cards found.</p>
@@ -65,7 +65,7 @@ const SavedCards = () => {
                   <img
                     src={card.photoPreview}
                     alt="Student"
-                    className="w-28 h-28 rounded-full object-cover border mb-3"
+                    className="w-28 h-28 rounded-full object-cover border mb-3 shadow"
                   />
                   <h2 className="text-xl font-semibold mb-1">{card.name}</h2>
                   <p className="text-sm">Roll No: {card.rollNumber}</p>
@@ -85,7 +85,7 @@ const SavedCards = () => {
                 {/* Action Section */}
                 {activeDownloadIndex === index ? (
                   <select
-                    className="mt-4 p-2 border rounded w-full max-w-[200px]"
+                    className="mt-4 p-2 border rounded-lg w-full  text-black"
                     defaultValue="template1"
                     onChange={(e) =>
                       handleDownload(card, index, e.target.value)
@@ -100,7 +100,7 @@ const SavedCards = () => {
                 ) : (
                   <button
                     onClick={() => handleStartDownload(index)}
-                    className="mt-4 flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                   >
                     <Download size={20} />
                     <span>Download</span>

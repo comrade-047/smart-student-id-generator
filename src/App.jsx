@@ -21,7 +21,7 @@ const NavigationButtons = ({ navigate }) => {
     <div className="p-4 flex justify-end max-w-7xl mx-auto">
       <button
         onClick={() => navigate('/saved')}
-        className="px-5 py-2 bg-blue-600 text-white rounded-lg font-medium shadow hover:bg-blue-700 transition duration-200"
+        className="px-6 py-2 rounded-xl bg-blue-600  font-semibold shadow-lg text-white bg-gradient-to-r from-teal-400 to blue-500 hover:from-blue-500 hover:to-teal-400 transition duration-300"
       >
         View Saved Cards
       </button>
@@ -66,11 +66,11 @@ const App = () => {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-gradient-to-tr from-teal-400 via-blue-400 to-cyan-500 text-white flex flex-col">
         <main className="flex-grow">
           <AppRoutes currentData={currentData} setCurrentData={setCurrentData} />
         </main>
-        <footer className="text-center text-sm text-gray-500 py-4">
+        <footer className="text-center text-sm text-white/80 py-4 backdrop-blur-sm">
           &copy; {new Date().getFullYear()} Smart ID Generator | All rights reserved.
         </footer>
       </div>
