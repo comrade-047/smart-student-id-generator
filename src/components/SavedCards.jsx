@@ -1,16 +1,15 @@
-// src/components/SavedCards.jsx
-import React, { useRef, useState } from 'react';
-import * as htmlToImage from 'html-to-image';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { ArrowLeft, Download } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 
-const SavedCards = () => {
-  const navigate = useNavigate();
-  const savedCards = JSON.parse(localStorage.getItem('savedCards')) || [];
-  const cardRefs = useRef({});
-  const [activeDownloadIndex, setActiveDownloadIndex] = useState(null);
-
+const SavedCards = ({
+  savedCards,
+  cardRefs,
+  activeDownloadIndex,
+  onBack,
+  onStartDownload,
+  onDownload
+}) => {
   const baseClasses =
     'w-full max-w-sm md:max-w-md p-6 rounded-2xl shadow-lg border flex flex-col items-center transition-all duration-300';
   const styles = {
@@ -18,30 +17,10 @@ const SavedCards = () => {
     template2: 'bg-gradient-to-br from-blue-100 to-blue-300 text-blue-900 backdrop-blur-md bg-opacity-90',
   };
 
-  const handleStartDownload = (index) => {
-    setActiveDownloadIndex(index);
-  };
-
-  const handleDownload = async (card, index) => {
-    const cardNode = cardRefs.current[index];
-
-    if (cardNode) {
-      setActiveDownloadIndex(null);
-      setTimeout(() => {
-        htmlToImage.toPng(cardNode).then((dataUrl) => {
-          const link = document.createElement('a');
-          link.download = `${card.name}_ID.png`;
-          link.href = dataUrl;
-          link.click();
-        });
-      }, 100);
-    }
-  };
-
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <button
-        onClick={() => navigate('/')}
+        onClick={onBack}
         className="flex items-center gap-2 mb-8 px-4 py-2 bg-white/80 hover:bg-white rounded shadow text-gray-800 backdrop-blur"
       >
         <ArrowLeft size={20} />
@@ -55,7 +34,7 @@ const SavedCards = () => {
       ) : (
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {savedCards.map((card, index) => {
-            const template = activeDownloadIndex === index ? 'template1' : 'template1';
+            const template = 'template1'; // or dynamically choose if needed
             return (
               <div key={index} className="flex flex-col items-center">
                 <div
@@ -85,21 +64,19 @@ const SavedCards = () => {
                 {/* Action Section */}
                 {activeDownloadIndex === index ? (
                   <select
-                    className="mt-4 p-2 border rounded-lg w-full  text-black"
+                    className="mt-4 p-2 border rounded-lg w-full text-black"
                     defaultValue="template1"
-                    onChange={(e) =>
-                      handleDownload(card, index, e.target.value)
-                    }
+                    onChange={(e) => onDownload(card, index, e.target.value)}
                   >
                     <option value="" disabled>
                       Choose template to download
                     </option>
-                    <option value="template1">Template 1 (White)</option>
-                    <option value="template2">Template 2 (Blue)</option>
+                    <option value="template1">Template 1 (White Glass)</option>
+                    <option value="template2">Template 2 (Cyan Glass)</option>
                   </select>
                 ) : (
                   <button
-                    onClick={() => handleStartDownload(index)}
+                    onClick={() => onStartDownload(index)}
                     className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                   >
                     <Download size={20} />

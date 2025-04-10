@@ -7,9 +7,9 @@ import {
   useNavigate,
   useLocation,
 } from 'react-router-dom';
-import StudentForm from './components/StudentForm';
-import IDCard from './components/IDCard';
-import SavedCards from './components/SavedCards';
+import IDCardContainer from './components/IDCardContainer';
+import SavedCardsContainer from './components/SavedCardsContainer';
+import StudentFormContainer from './components/StudentFormContainer';
 
 const NavigationButtons = ({ navigate }) => {
   const location = useLocation();
@@ -39,13 +39,13 @@ const AppRoutes = ({ currentData, setCurrentData }) => {
         <Routes>
           <Route
             path="/"
-            element={<StudentForm onSubmit={(data) => setCurrentData(data)} />}
+            element={<StudentFormContainer onSubmit={(data) => setCurrentData(data)} />}
           />
           <Route
             path="/preview"
             element={
               currentData ? (
-                <IDCard data={currentData} onBack={() => navigate('/')} />
+                <IDCardContainer data={currentData} onBack={() => navigate('/')} />
               ) : (
                 <div className="p-6 mt-4 text-center text-red-600 bg-red-100 rounded-lg shadow">
                   No data found. Please fill out the form first.
@@ -53,7 +53,7 @@ const AppRoutes = ({ currentData, setCurrentData }) => {
               )
             }
           />
-          <Route path="/saved" element={<SavedCards />} />
+          <Route path="/saved" element={<SavedCardsContainer />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

@@ -1,69 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { classOptions, allergyOptions, busRoutes } from '../utils/options';
 
-const classOptions = ['1A', '1B', '2A', '2B'];
-const allergyOptions = ['Peanuts', 'Gluten', 'Lactose', 'Soy', 'Other'];
-const busRoutes = ['Route 1', 'Route 2', 'Route 3', 'Route 4'];
-
-const StudentForm = ({ onSubmit }) => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: '',
-    rollNumber: '',
-    classDivision: '',
-    allergies: [],
-    otherAllergy: '',
-    rackNumber: '',
-    busRoute: '',
-    photo: null,
-    photoPreview: null,
-  });
-
-  const handleChange = (e) => {
-    const { name, value, files, checked } = e.target;
-    if (name === 'photo') {
-      const file = files[0];
-      setFormData((prev) => ({
-        ...prev,
-        photo: file,
-        photoPreview: URL.createObjectURL(file),
-      }));
-    } else if (name === 'allergies') {
-      setFormData((prev) => ({
-        ...prev,
-        allergies: checked
-          ? [...prev.allergies, value]
-          : prev.allergies.filter((a) => a !== value),
-      }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    let finalAllergies = [...formData.allergies];
-    if (finalAllergies.includes('Other') && formData.otherAllergy.trim() !== '') {
-      finalAllergies = finalAllergies.filter(a => a !== 'Other');
-      finalAllergies.push(formData.otherAllergy.trim());
-    }
-
-    const newEntry = {
-      ...formData,
-      allergies: finalAllergies,
-      id: Date.now(),
-    };
-
-    const existing = JSON.parse(localStorage.getItem('savedCards')) || [];
-    localStorage.setItem('savedCards', JSON.stringify([...existing, newEntry]));
-    onSubmit(newEntry);
-    navigate('/preview');
-  };
-
+const StudentForm = ({formData,handleChange,handleSubmit,}) => {
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-4xl font-bold text-white text-center mb-8  drop-shadow">Student Information Form</h1>
+      <h1 className="text-4xl font-bold text-white text-center mb-8 drop-shadow">Student Information Form</h1>
       <form onSubmit={handleSubmit} className="space-y-6 bg-white/10 backdrop-blur-2xl text-white border border-white/20 rounded-3xl shadow-2xl p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
@@ -87,7 +28,7 @@ const StudentForm = ({ onSubmit }) => {
             value={formData.classDivision}
             onChange={handleChange}
             required
-            className="p-2 rounded-xl bg-white/20 placeholder-white/80 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="p-2 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="">Select Class & Division</option>
             {classOptions.map((opt) => (
@@ -99,7 +40,7 @@ const StudentForm = ({ onSubmit }) => {
             value={formData.busRoute}
             onChange={handleChange}
             required
-            className="p-2 rounded-xl bg-white/20 placeholder-white/80 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="p-2 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="">Select Bus Route</option>
             {busRoutes.map((route) => (
