@@ -1,104 +1,115 @@
-import React, { useEffect, useState } from 'react';
-import { QRCodeCanvas } from 'qrcode.react';
+// src/components/SavedCards.jsx
+import React, { useRef, useState } from 'react';
+import * as htmlToImage from 'html-to-image';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Download } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 const SavedCards = () => {
-  const [savedData, setSavedData] = useState([]);
   const navigate = useNavigate();
+  const savedCards = JSON.parse(localStorage.getItem('savedCards')) || [];
+  const cardRefs = useRef({});
+  const [activeDownloadIndex, setActiveDownloadIndex] = useState(null); // Track which card is downloading
 
-  useEffect(() => {
-    const stored = localStorage.getItem('savedCards');
-    if (stored) {
-      setSavedData(JSON.parse(stored));
+  const baseClasses =
+    'w-full md:w-[350px] p-4 rounded-xl shadow-lg border flex flex-col items-center';
+  const styles = {
+    template1: 'bg-white text-gray-800',
+    template2: 'bg-blue-100 text-blue-900',
+  };
+
+  const handleStartDownload = (index) => {
+    setActiveDownloadIndex(index); // Show template selector
+  };
+
+  const handleDownload = async (card, index) => {
+    const cardNode = cardRefs.current[index];
+
+    if (cardNode) {
+      setActiveDownloadIndex(null); // Hide selector after selection
+      setTimeout(() => {
+        htmlToImage.toPng(cardNode).then((dataUrl) => {
+          const link = document.createElement('a');
+          link.download = `${card.name}_ID.png`;
+          link.href = dataUrl;
+          link.click();
+        });
+      }, 100); // Small delay to ensure UI updates
     }
-  }, []);
-
-  const handleDownload = (data) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const cardWidth = 350;
-    const cardHeight = 200;
-    canvas.width = cardWidth;
-    canvas.height = cardHeight;
-
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, cardWidth, cardHeight);
-    ctx.fillStyle = '#000000';
-    ctx.font = '16px sans-serif';
-    ctx.fillText(`Name: ${data.name}`, 10, 30);
-    ctx.fillText(`Roll No: ${data.rollNumber}`, 10, 55);
-    ctx.fillText(`Class & Div: ${data.classDivision}`, 10, 80);
-    ctx.fillText(`Rack No: ${data.rackNumber}`, 10, 105);
-    ctx.fillText(`Bus Route: ${data.busRoute}`, 10, 130);
-    if (data.allergies.length > 0) {
-      ctx.fillText(`Allergies: ${data.allergies.join(', ')}`, 10, 155);
-    }
-
-     
-    // Just a visual placeholder, QR code not included in canvas download for now
-
-    const link = document.createElement('a');
-    link.download = `${data.name}_Saved_ID.png`;
-    link.href = canvas.toDataURL();
-    link.click();
   };
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-gray-200 transition-all"
-        >
-          <ArrowLeft size={20} />
-          <span className="font-medium">Back to Form</span>
-        </button>
-        <h1 className="text-xl font-bold text-center flex-1">Saved ID Cards</h1>
-      </div>
+      <button
+        onClick={() => navigate('/')}
+        className="flex items-center gap-2 mb-6 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded text-gray-800"
+      >
+        <ArrowLeft size={20} />
+        <span>Back to Form</span>
+      </button>
 
-      {savedData.length === 0 ? (
-        <div className="text-center text-gray-500">No saved cards found.</div>
+      <h1 className="text-2xl font-bold mb-6 text-center">Saved ID Cards</h1>
+
+      {savedCards.length === 0 ? (
+        <p className="text-center text-gray-500">No saved cards found.</p>
       ) : (
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-          {savedData.map((data, index) => (
-            <div
-              key={index}
-              className="bg-white shadow-md rounded-lg p-4 flex flex-col gap-2 border"
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  src={data.photoPreview}
-                  alt="Student"
-                  className="w-16 h-16 rounded-full object-cover border"
-                />
-                <div>
-                  <h2 className="text-lg font-semibold">{data.name}</h2>
-                  <p className="text-sm text-gray-600">Roll No: {data.rollNumber}</p>
-                  <p className="text-sm text-gray-600">
-                    Class & Div: {data.classDivision}
-                  </p>
-                  <p className="text-sm text-gray-600">Rack No: {data.rackNumber}</p>
-                  <p className="text-sm text-gray-600">Bus Route: {data.busRoute}</p>
-                  {data.allergies.length > 0 && (
-                    <p className="text-sm text-red-600">
-                      Allergies: {data.allergies.join(', ')}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div className="flex justify-between items-center mt-2">
-                <QRCodeCanvas value={JSON.stringify(data)} size={64} />
-                <button
-                  onClick={() => handleDownload(data)}
-                  className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+        <div className="grid gap-6 md:grid-cols-2">
+          {savedCards.map((card, index) => {
+            const template = activeDownloadIndex === index ? 'template1' : 'template1'; // Default for UI render
+            return (
+              <div key={index} className="flex flex-col items-center">
+                {/* Render Card */}
+                <div
+                  ref={(el) => (cardRefs.current[index] = el)}
+                  className={`${baseClasses} ${styles[template]} transition-all duration-300`}
                 >
-                  <Download size={16} />
-                  Download
-                </button>
+                  <img
+                    src={card.photoPreview}
+                    alt="Student"
+                    className="w-24 h-24 rounded-full object-cover border mb-2"
+                  />
+                  <h2 className="text-xl font-semibold">{card.name}</h2>
+                  <p>Roll No: {card.rollNumber}</p>
+                  <p>Class & Division: {card.classDivision}</p>
+                  <p>Rack Number: {card.rackNumber}</p>
+                  <p>Bus Route: {card.busRoute}</p>
+                  {card.allergies.length > 0 && (
+                    <div className="mt-2 text-sm text-red-600">
+                      Allergies: {card.allergies.join(', ')}
+                    </div>
+                  )}
+                  <div className="mt-4">
+                    <QRCodeCanvas value={JSON.stringify(card)} size={96} />
+                  </div>
+                </div>
+
+                {/* Action Section */}
+                {activeDownloadIndex === index ? (
+                  <select
+                    className="mt-3 p-2 border rounded"
+                    defaultValue="template1"
+                    onChange={(e) =>
+                      handleDownload(card, index, e.target.value)
+                    }
+                  >
+                    <option value="" disabled>
+                      Choose template to download
+                    </option>
+                    <option value="template1">Template 1 (White)</option>
+                    <option value="template2">Template 2 (Blue)</option>
+                  </select>
+                ) : (
+                  <button
+                    onClick={() => handleStartDownload(index)}
+                    className="mt-3 flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                  >
+                    <Download size={20} />
+                    <span>Download</span>
+                  </button>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
