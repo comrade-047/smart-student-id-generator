@@ -9,24 +9,24 @@ const SavedCards = () => {
   const navigate = useNavigate();
   const savedCards = JSON.parse(localStorage.getItem('savedCards')) || [];
   const cardRefs = useRef({});
-  const [activeDownloadIndex, setActiveDownloadIndex] = useState(null); // Track which card is downloading
+  const [activeDownloadIndex, setActiveDownloadIndex] = useState(null);
 
   const baseClasses =
-    'w-full md:w-[350px] p-4 rounded-xl shadow-lg border flex flex-col items-center';
+    'w-full max-w-sm md:max-w-md p-6 rounded-2xl shadow-lg border flex flex-col items-center transition-all duration-300';
   const styles = {
     template1: 'bg-white text-gray-800',
     template2: 'bg-blue-100 text-blue-900',
   };
 
   const handleStartDownload = (index) => {
-    setActiveDownloadIndex(index); // Show template selector
+    setActiveDownloadIndex(index);
   };
 
   const handleDownload = async (card, index) => {
     const cardNode = cardRefs.current[index];
 
     if (cardNode) {
-      setActiveDownloadIndex(null); // Hide selector after selection
+      setActiveDownloadIndex(null);
       setTimeout(() => {
         htmlToImage.toPng(cardNode).then((dataUrl) => {
           const link = document.createElement('a');
@@ -34,45 +34,44 @@ const SavedCards = () => {
           link.href = dataUrl;
           link.click();
         });
-      }, 100); // Small delay to ensure UI updates
+      }, 100);
     }
   };
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto">
       <button
         onClick={() => navigate('/')}
-        className="flex items-center gap-2 mb-6 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded text-gray-800"
+        className="flex items-center gap-2 mb-8 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded text-gray-800"
       >
         <ArrowLeft size={20} />
         <span>Back to Form</span>
       </button>
 
-      <h1 className="text-2xl font-bold mb-6 text-center">Saved ID Cards</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center text-gray-900">Saved ID Cards</h1>
 
       {savedCards.length === 0 ? (
-        <p className="text-center text-gray-500">No saved cards found.</p>
+        <p className="text-center text-gray-500 text-lg">No saved cards found.</p>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {savedCards.map((card, index) => {
-            const template = activeDownloadIndex === index ? 'template1' : 'template1'; // Default for UI render
+            const template = activeDownloadIndex === index ? 'template1' : 'template1';
             return (
               <div key={index} className="flex flex-col items-center">
-                {/* Render Card */}
                 <div
                   ref={(el) => (cardRefs.current[index] = el)}
-                  className={`${baseClasses} ${styles[template]} transition-all duration-300`}
+                  className={`${baseClasses} ${styles[template]}`}
                 >
                   <img
                     src={card.photoPreview}
                     alt="Student"
-                    className="w-24 h-24 rounded-full object-cover border mb-2"
+                    className="w-28 h-28 rounded-full object-cover border mb-3"
                   />
-                  <h2 className="text-xl font-semibold">{card.name}</h2>
-                  <p>Roll No: {card.rollNumber}</p>
-                  <p>Class & Division: {card.classDivision}</p>
-                  <p>Rack Number: {card.rackNumber}</p>
-                  <p>Bus Route: {card.busRoute}</p>
+                  <h2 className="text-xl font-semibold mb-1">{card.name}</h2>
+                  <p className="text-sm">Roll No: {card.rollNumber}</p>
+                  <p className="text-sm">Class & Division: {card.classDivision}</p>
+                  <p className="text-sm">Rack Number: {card.rackNumber}</p>
+                  <p className="text-sm">Bus Route: {card.busRoute}</p>
                   {card.allergies.length > 0 && (
                     <div className="mt-2 text-sm text-red-600">
                       Allergies: {card.allergies.join(', ')}
@@ -86,7 +85,7 @@ const SavedCards = () => {
                 {/* Action Section */}
                 {activeDownloadIndex === index ? (
                   <select
-                    className="mt-3 p-2 border rounded"
+                    className="mt-4 p-2 border rounded w-full max-w-[200px]"
                     defaultValue="template1"
                     onChange={(e) =>
                       handleDownload(card, index, e.target.value)
@@ -101,7 +100,7 @@ const SavedCards = () => {
                 ) : (
                   <button
                     onClick={() => handleStartDownload(index)}
-                    className="mt-3 flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    className="mt-4 flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                   >
                     <Download size={20} />
                     <span>Download</span>
