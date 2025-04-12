@@ -27,7 +27,7 @@ const IDCard = forwardRef(({ data, template }, ref) => {
       <p className="text-sm mb-1">Rack Number: <span className="font-medium">{data.rackNumber}</span></p>
       <p className="text-sm mb-2">Bus Route: <span className="font-medium">{data.busRoute}</span></p>
       {data.allergies.length > 0 && (
-        <div className="mt-2 text-sm text-red-600 text-center">
+        <div className="mt-2 text-sm text-red-500 text-center">
           Allergies: {data.allergies.join(', ')}
         </div>
       )}

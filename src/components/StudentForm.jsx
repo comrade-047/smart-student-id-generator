@@ -4,7 +4,12 @@ import { classOptions, allergyOptions, busRoutes } from '../utils/options';
 const StudentForm = ({formData,handleChange,handleSubmit,}) => {
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-4xl font-bold text-white text-center mb-8 drop-shadow">Student Information Form</h1>
+      <h1
+        className="text-4xl font-bold text-white text-center mb-8 drop-shadow"
+      >
+        Student Information Form
+      </h1>
+      
       <form onSubmit={handleSubmit} className="space-y-6 bg-white/10 backdrop-blur-2xl text-white border border-white/20 rounded-3xl shadow-2xl p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
